@@ -6,9 +6,14 @@ async function run(): Promise<void> {
   try {
     const body = github.context.payload.pull_request?.body
 
+    const now = new Date()
+    const utcMilllisecondsSinceEpoch =
+      now.getTime() + now.getTimezoneOffset() * 60 * 1000
+    const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000)
+
     const token = core.getInput('repo-token', {required: true})
     const githubApi = new github.GitHub(token)
-    const appName = 'Task Completed Checker'
+    const appName = `Task Completed Checker ${utcSecondsSinceEpoch}`
 
     if (!body) {
       core.info('no task list and skip the process.')
